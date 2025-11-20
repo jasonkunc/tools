@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Shade Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 48px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #000;
+            border: 6px solid #000;
+            padding: 20px 30px;
+            background-color: #FFD700;
+            box-shadow: 12px 12px 0 #000;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            background-color: #fff;
+            border: 4px solid #000;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 8px 8px 0 #000;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .input-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        input {
+            padding: 20px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            text-transform: uppercase;
+            border: 5px solid #000;
+            background-color: #fff;
+            box-shadow: 10px 10px 0 #000;
+            transition: all 0.1s;
+        }
+        
+        input:focus {
+            outline: none;
+            transform: translate(2px, 2px);
+            box-shadow: 8px 8px 0 #000;
+        }
+        
+        input::placeholder {
+            color: #999;
+        }
+        
+        .shade-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .shade-box {
+            padding: 25px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 18px;
+            border: 5px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            transition: all 0.1s;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .shade-box:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 #000;
+        }
+        
+        .shade-box:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0 0 0 #000;
+        }
+        
+        .original-color {
+            border: 6px solid #000;
+            padding: 35px 25px;
+            font-size: 28px;
+            box-shadow: 10px 10px 0 #000;
+            position: relative;
+        }
+        
+        .original-color::before {
+            content: '★ ORIGINAL ★';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            letter-spacing: 3px;
+            opacity: 0.7;
+        }
+        
+        .error-message {
+            background-color: #FF6B6B;
+            border: 5px solid #000;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 8px 8px 0 #000;
+            margin: 20px 0;
+        }
+        
+        .copy-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background-color: #00FF00;
+            border: 6px solid #000;
+            padding: 30px 50px;
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 12px 12px 0 #000;
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        
+        .copy-notification.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .copied-hex {
+            display: block;
+            margin-top: 10px;
+            font-size: 32px;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Color Shade Generator</h1>
+        
+        <div class="subtitle">
+            Enter a hex color code to see lighter and darker shades in 5% steps
+        </div>
+        
+        <!-- Input field container -->
+        <div class="input-container">
+            <input 
+                type="text" 
+                id="colorInput" 
+                placeholder="#FFFFFF" 
+                maxlength="7"
+            >
+        </div>
+        
+        <!-- Container for all shade boxes -->
+        <div id="shadeContainer" class="shade-container"></div>
+        
+        <!-- Copy notification popup -->
+        <div id="copyNotification" class="copy-notification">
+            ✓ Copied!
+            <span id="copiedHex" class="copied-hex"></span>
+        </div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const colorInput = document.getElementById('colorInput');
+        const shadeContainer = document.getElementById('shadeContainer');
+        const copyNotification = document.getElementById('copyNotification');
+        const copiedHex = document.getElementById('copiedHex');
+
+        /**
+         * Shows a notification popup when a color is copied
+         * @param {string} hexCode - The hex code that was copied
+         */
+        function showCopyNotification(hexCode) {
+            // Update the notification with the copied hex code
+            copiedHex.textContent = hexCode;
+            
+            // Show the notification with animation
+            copyNotification.classList.add('show');
+            
+            // Hide the notification after 1 second
+            setTimeout(() => {
+                copyNotification.classList.remove('show');
+            }, 1000);
+        }
+
+        /**
+         * Converts hex color to RGB object
+         * @param {string} hex - Hex color code (e.g., "#ffffff" or "#fff")
+         * @returns {object} RGB values {r, g, b}
+         */
+        function hexToRgb(hex) {
+            // Remove # if present
+            hex = hex.replace('#', '');
+            
+            // Convert 3-digit hex to 6-digit
+            if (hex.length === 3) {
+                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+            }
+            
+            // Parse hex values to decimal
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            return { r, g, b };
+        }
+
+        /**
+         * Converts RGB values to hex color code
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {string} Hex color code
+         */
+        function rgbToHex(r, g, b) {
+            // Ensure values are within 0-255 range
+            r = Math.max(0, Math.min(255, Math.round(r)));
+            g = Math.max(0, Math.min(255, Math.round(g)));
+            b = Math.max(0, Math.min(255, Math.round(b)));
+            
+            // Convert to hex and pad with zeros if needed
+            const toHex = (n) => n.toString(16).padStart(2, '0');
+            return '#' + toHex(r) + toHex(g) + toHex(b);
+        }
+
+        /**
+         * Calculates relative luminance for a color (WCAG formula)
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {number} Relative luminance value
+         */
+        function getLuminance(r, g, b) {
+            // Normalize RGB values to 0-1 range
+            const normalize = (c) => {
+                c = c / 255;
+                // Apply sRGB gamma correction
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            };
+            
+            const rNorm = normalize(r);
+            const gNorm = normalize(g);
+            const bNorm = normalize(b);
+            
+            // Calculate relative luminance using WCAG formula
+            return 0.2126 * rNorm + 0.7152 * gNorm + 0.0722 * bNorm;
+        }
+
+        /**
+         * Determines if white or black text should be used based on background color
+         * Uses WCAG contrast ratio guidelines for accessibility
+         * @param {string} hexColor - Background color in hex format
+         * @returns {string} "#000000" or "#ffffff"
+         */
+        function getContrastColor(hexColor) {
+            const rgb = hexToRgb(hexColor);
+            const luminance = getLuminance(rgb.r, rgb.g, rgb.b);
+            
+            // If luminance is above 0.5, use black text; otherwise use white
+            // This ensures ADA compliant contrast ratios
+            return luminance > 0.5 ? '#000000' : '#ffffff';
+        }
+
+        /**
+         * Generates a lighter shade of the given color
+         * @param {object} rgb - RGB color object {r, g, b}
+         * @param {number} percent - Percentage to lighten (0-100)
+         * @returns {string} Hex color code of lighter shade
+         */
+        function lightenColor(rgb, percent) {
+            // Calculate how much to add to each channel to reach white
+            const factor = percent / 100;
+            const r = rgb.r + (255 - rgb.r) * factor;
+            const g = rgb.g + (255 - rgb.g) * factor;
+            const b = rgb.b + (255 - rgb.b) * factor;
+            
+            return rgbToHex(r, g, b);
+        }
+
+        /**
+         * Generates a darker shade of the given color
+         * @param {object} rgb - RGB color object {r, g, b}
+         * @param {number} percent - Percentage to darken (0-100)
+         * @returns {string} Hex color code of darker shade
+         */
+        function darkenColor(rgb, percent) {
+            // Calculate how much to reduce each channel toward black
+            const factor = 1 - (percent / 100);
+            const r = rgb.r * factor;
+            const g = rgb.g * factor;
+            const b = rgb.b * factor;
+            
+            return rgbToHex(r, g, b);
+        }
+
+        /**
+         * Removes duplicate consecutive colors from the array
+         * @param {array} colors - Array of hex color codes
+         * @returns {array} Array with duplicates removed
+         */
+        function removeDuplicates(colors) {
+            return colors.filter((color, index) => {
+                // Keep the color if it's different from the next one
+                // or if it's the last item
+                return index === colors.length - 1 || color !== colors[index + 1];
+            });
+        }
+
+        /**
+         * Generates and displays all color shades
+         * @param {string} hexColor - Base hex color code
+         */
+        function generateShades(hexColor) {
+            // Validate hex color format
+            if (!/^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hexColor)) {
+                shadeContainer.innerHTML = '<div class="error-message">⚠ Invalid hex color code ⚠</div>';
+                return;
+            }
+            
+            // Ensure hex starts with #
+            if (!hexColor.startsWith('#')) {
+                hexColor = '#' + hexColor;
+            }
+            
+            const rgb = hexToRgb(hexColor);
+            const shades = [];
+            
+            // Generate lighter shades (5% to 100% lighter) in reverse order
+            for (let i = 100; i >= 5; i -= 5) {
+                shades.push(lightenColor(rgb, i));
+            }
+            
+            // Add the original color
+            shades.push(hexColor.toLowerCase());
+            
+            // Generate darker shades (5% to 100% darker)
+            for (let i = 5; i <= 100; i += 5) {
+                shades.push(darkenColor(rgb, i));
+            }
+            
+            // Remove consecutive duplicate colors
+            const uniqueShades = removeDuplicates(shades);
+            
+            // Clear previous shades
+            shadeContainer.innerHTML = '';
+            
+            // Create and append shade boxes
+            uniqueShades.forEach(shade => {
+                const shadeBox = document.createElement('div');
+                shadeBox.className = 'shade-box';
+                shadeBox.style.backgroundColor = shade;
+                
+                // Add special styling to the original input color
+                if (shade.toLowerCase() === hexColor.toLowerCase()) {
+                    shadeBox.classList.add('original-color');
+                }
+                
+                // Set text color for ADA compliance
+                shadeBox.style.color = getContrastColor(shade);
+                
+                // Display the hex code
+                shadeBox.textContent = shade.toUpperCase();
+                
+                // Add click to copy functionality
+                shadeBox.addEventListener('click', () => {
+                    // Copy hex code to clipboard
+                    navigator.clipboard.writeText(shade.toUpperCase()).then(() => {
+                        // Show notification on successful copy
+                        showCopyNotification(shade.toUpperCase());
+                    }).catch(err => {
+                        // Log error if copy fails
+                        console.error('Failed to copy:', err);
+                    });
+                });
+                
+                shadeContainer.appendChild(shadeBox);
+            });
+        }
+
+        // Event listener for input changes
+        colorInput.addEventListener('input', (e) => {
+            const value = e.target.value.trim();
+            if (value) {
+                generateShades(value);
+            } else {
+                // Clear shades if input is empty
+                shadeContainer.innerHTML = '';
+            }
+        });
+
+        // Generate shades on page load if there's a default value
+        if (colorInput.value) {
+            generateShades(colorInput.value);
+        }
+    </script>
+</body>
+</html>
+
+Displaying colors-neobrutalism-claude-v8.html.
