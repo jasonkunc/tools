@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker - Neobrutalism</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #FF6B6B; /* Will be updated to match color display */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Main container with neobrutalism styling */
+        .container {
+            background: white;
+            border: 6px solid #000;
+            box-shadow: 12px 12px 0 #000;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        /* Header styling */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        /* Color picker wrapper */
+        .picker-wrapper {
+            display: flex;
+            gap: 30px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        /* Sliders section */
+        .sliders-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .slider-group {
+            margin-bottom: 25px;
+        }
+
+        .slider-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .slider-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Custom slider styling */
+        input[type="range"] {
+            flex: 1;
+            height: 50px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        /* Slider track */
+        input[type="range"]::-webkit-slider-track {
+            height: 50px;
+            border: 4px solid #000;
+            background: #f0f0f0;
+        }
+
+        input[type="range"]::-moz-range-track {
+            height: 50px;
+            border: 4px solid #000;
+            background: #f0f0f0;
+        }
+
+        /* Slider thumb */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 35px;
+            height: 58px;
+            background: white;
+            cursor: pointer;
+            border: 5px solid #000;
+            box-shadow: 3px 3px 0 #000;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 35px;
+            height: 58px;
+            background: white;
+            cursor: pointer;
+            border: 5px solid #000;
+            border-radius: 0;
+            box-shadow: 3px 3px 0 #000;
+        }
+
+        /* Value display */
+        .value-display {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 8px;
+            border: 4px solid #000;
+            background: white;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Color display tile */
+        .color-display {
+            width: 220px;
+            height: 100%;
+            min-height: 300px;
+            border: 5px solid #000;
+            box-shadow: 8px 8px 0 #000;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.1s;
+            position: relative;
+        }
+
+        .color-display:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+
+        .color-display:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        /* Hex code label inside the tile */
+        .hex-label {
+            font-size: 1.3rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 4px solid currentColor;
+            text-transform: uppercase;
+        }
+
+        /* Click instruction */
+        .click-instruction {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Notification banner */
+        .notification {
+            background: #10B981;
+            color: white;
+            padding: 15px 20px;
+            border: 5px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            max-height: 100px;
+            margin-top: 30px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 700px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .picker-wrapper {
+                flex-direction: column;
+            }
+
+            .color-display {
+                width: 100%;
+                height: 200px;
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Color Picker</h1>
+        <p class="subtitle">Adjust RGB values, copy the hex code</p>
+        
+        <div class="picker-wrapper">
+            <!-- RGB Sliders section -->
+            <div class="sliders-section">
+                <!-- Red slider -->
+                <div class="slider-group">
+                    <label for="redSlider">Red (R):</label>
+                    <div class="slider-container">
+                        <input type="range" id="redSlider" min="0" max="255" value="255">
+                        <div class="value-display" id="redValue">255</div>
+                    </div>
+                </div>
+
+                <!-- Green slider -->
+                <div class="slider-group">
+                    <label for="greenSlider">Green (G):</label>
+                    <div class="slider-container">
+                        <input type="range" id="greenSlider" min="0" max="255" value="107">
+                        <div class="value-display" id="greenValue">107</div>
+                    </div>
+                </div>
+
+                <!-- Blue slider -->
+                <div class="slider-group">
+                    <label for="blueSlider">Blue (B):</label>
+                    <div class="slider-container">
+                        <input type="range" id="blueSlider" min="0" max="255" value="107">
+                        <div class="value-display" id="blueValue">107</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Color display tile that shows selected color and hex code -->
+            <div class="color-display" id="colorDisplay">
+                <span class="hex-label" id="hexLabel">#FF6B6B</span>
+            </div>
+        </div>
+
+        <p class="click-instruction">👆 Click the color tile to copy hex code</p>
+
+        <!-- Notification banner -->
+        <div class="notification" id="notification">
+            Copied to clipboard! ✓
+        </div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const redSlider = document.getElementById('redSlider');
+        const greenSlider = document.getElementById('greenSlider');
+        const blueSlider = document.getElementById('blueSlider');
+        const redValue = document.getElementById('redValue');
+        const greenValue = document.getElementById('greenValue');
+        const blueValue = document.getElementById('blueValue');
+        const colorDisplay = document.getElementById('colorDisplay');
+        const hexLabel = document.getElementById('hexLabel');
+        const notification = document.getElementById('notification');
+
+        /**
+         * Generate a random hex color
+         * @returns {object} - Object with r, g, b values (0-255)
+         */
+        function generateRandomColor() {
+            // Generate random values for R, G, B (0-255)
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            
+            return { r, g, b };
+        }
+
+        /**
+         * Set random initial color for sliders and background
+         * Called on page load to create unique color each time
+         */
+        function setRandomInitialColor() {
+            const { r, g, b } = generateRandomColor();
+            
+            // Set slider values to random color
+            redSlider.value = r;
+            greenSlider.value = g;
+            blueSlider.value = b;
+            
+            // Update the display (which will also update body background)
+            updateColorDisplay();
+        }
+
+        /**
+         * Convert RGB values to hex color code
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {string} - Hex color code (e.g., "#FF6B6B")
+         */
+        function rgbToHex(r, g, b) {
+            // Convert each value to hex and pad with zero if needed
+            const hexR = r.toString(16).padStart(2, '0');
+            const hexG = g.toString(16).padStart(2, '0');
+            const hexB = b.toString(16).padStart(2, '0');
+            
+            // Combine and return as uppercase hex code
+            return `#${hexR}${hexG}${hexB}`.toUpperCase();
+        }
+
+        /**
+         * Calculate relative luminance of a color for WCAG contrast compliance
+         * Uses the formula from WCAG 2.0 specification
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {number} - Relative luminance value (0-1)
+         */
+        function calculateLuminance(r, g, b) {
+            // Convert RGB values to 0-1 range
+            const rsRGB = r / 255;
+            const gsRGB = g / 255;
+            const bsRGB = b / 255;
+
+            // Apply gamma correction as per WCAG formula
+            const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+            const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+            const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+
+            // Calculate and return relative luminance
+            return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+        }
+
+        /**
+         * Determine if text should be black or white for optimal contrast
+         * Based on WCAG 2.0 guidelines for contrast ratios
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {string} - Either '#000000' or '#FFFFFF'
+         */
+        function getContrastColor(r, g, b) {
+            // Calculate luminance
+            const luminance = calculateLuminance(r, g, b);
+            
+            // Use white text on dark backgrounds (luminance < 0.5)
+            // Use black text on light backgrounds (luminance >= 0.5)
+            return luminance > 0.5 ? '#000000' : '#FFFFFF';
+        }
+
+        /**
+         * Update the color display based on current RGB slider values
+         * Updates the display tile, hex label, text contrast, and body background
+         */
+        function updateColorDisplay() {
+            // Get current RGB values from sliders
+            const r = parseInt(redSlider.value);
+            const g = parseInt(greenSlider.value);
+            const b = parseInt(blueSlider.value);
+            
+            // Update value displays
+            redValue.textContent = r;
+            greenValue.textContent = g;
+            blueValue.textContent = b;
+            
+            // Convert to hex
+            const hexColor = rgbToHex(r, g, b);
+            
+            // Update color display tile background
+            colorDisplay.style.backgroundColor = hexColor;
+            
+            // Update body background to match the selected color
+            document.body.style.backgroundColor = hexColor;
+            
+            // Update hex label text
+            hexLabel.textContent = hexColor;
+            
+            // Calculate and set appropriate text color for WCAG compliance
+            const textColor = getContrastColor(r, g, b);
+            hexLabel.style.color = textColor;
+            hexLabel.style.borderColor = textColor;
+            
+            // Update slider track colors to show current color
+            redSlider.style.background = `linear-gradient(to right, #000000 0%, rgb(${r},0,0) 100%)`;
+            greenSlider.style.background = `linear-gradient(to right, #000000 0%, rgb(0,${g},0) 100%)`;
+            blueSlider.style.background = `linear-gradient(to right, #000000 0%, rgb(0,0,${b}) 100%)`;
+        }
+
+        /**
+         * Copy text to clipboard using the modern Clipboard API
+         * @param {string} text - Text to copy to clipboard
+         * @returns {Promise} - Promise that resolves when copy is complete
+         */
+        async function copyToClipboard(text) {
+            try {
+                // Use the Clipboard API to write text
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch (err) {
+                // Fallback for older browsers (if Clipboard API fails)
+                console.error('Failed to copy:', err);
+                
+                // Create temporary textarea element
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                
+                // Select and copy text
+                textarea.select();
+                document.execCommand('copy');
+                
+                // Clean up
+                document.body.removeChild(textarea);
+                return true;
+            }
+        }
+
+        /**
+         * Show notification banner message
+         * Displays a temporary notification that fades in and out
+         */
+        function showNotification() {
+            // Add 'show' class to trigger CSS animation
+            notification.classList.add('show');
+            
+            // Remove notification after 2 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        /**
+         * Handle color tile click - copy hex code to clipboard
+         */
+        colorDisplay.addEventListener('click', async () => {
+            const hexCode = hexLabel.textContent;
+            
+            // Copy to clipboard
+            const success = await copyToClipboard(hexCode);
+            
+            // Show notification if copy was successful
+            if (success) {
+                showNotification();
+            }
+        });
+
+        /**
+         * Add event listeners to all RGB sliders
+         * Update display whenever any slider value changes
+         */
+        redSlider.addEventListener('input', updateColorDisplay);
+        greenSlider.addEventListener('input', updateColorDisplay);
+        blueSlider.addEventListener('input', updateColorDisplay);
+
+        // Initialize with a random color on page load
+        setRandomInitialColor();
+    </script>
+</body>
+</html>
