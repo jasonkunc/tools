@@ -42,7 +42,7 @@
             color: #000;
             border: 6px solid #000;
             padding: 20px 30px;
-            background-color: #FFD700;
+            background-color: #ffd700;
             box-shadow: 12px 12px 0 #000;
             margin: 20px;
             text-align: center;
@@ -63,7 +63,7 @@
             width: 100%;
             max-width: 900px;
         }
-        
+
         /* Color picker wrapper */
         .picker-wrapper {
             display: flex;
@@ -142,10 +142,14 @@
         }
 
         #lightnessSlider::-webkit-slider-track {
-            background: linear-gradient(to right, #000000 0%, #808080 50%, #FFFFFF 100%);
+            background: 
+                linear-gradient(135deg, #000000 0%, #000000 50%, transparent 50.1%, transparent 100%),
+                #FFFFFF;
         }
         #lightnessSlider::-moz-range-track {
-            background: linear-gradient(to right, #000000 0%, #808080 50%, #FFFFFF 100%);
+            background: 
+                linear-gradient(135deg, #000000 0%, #000000 50%, transparent 50.1%, transparent 100%),
+                #FFFFFF;
         }
 
         /* Slider thumb */
@@ -243,7 +247,7 @@
 
         /* Notification banner */
         .notification {
-            background: #FFD700;
+            background: #ffd700;
             color: #000000;
             padding: 15px 20px;
             border: 5px solid #000;
@@ -289,11 +293,10 @@
     </style>
 </head>
 <body>
-
             <h1>Color Picker</h1>
         <p class="subtitle">Adjust RGB values, copy the hex code</p>
-    
     <div class="container">
+
         
         <div class="picker-wrapper">
             <!-- RGB Sliders section -->
