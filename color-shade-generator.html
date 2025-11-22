@@ -121,12 +121,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Increased gap slightly to separate tiles */
+            gap: 15px;
         }
         
         .shade-box {
-            position: relative; /* Needed for absolute positioning of the label */
-            padding: 30px 20px 20px 20px; /* More padding top for the label */
+            position: relative;
+            padding: 30px 20px 20px 20px;
             text-align: center;
             font-weight: 900;
             font-size: 18px;
@@ -148,19 +148,19 @@
             box-shadow: 0 0 0 #000;
         }
 
-        /* NEW: Percentage Label Style */
+        /* Percentage Label Style */
         .percentage-label {
             position: absolute;
             top: -4px;
             left: -4px;
-            background-color: #ffffff; /* White background for consistency */
+            background-color: #ffffff;
             color: #000000;
             border: 3px solid #000;
             font-size: 10px;
             font-weight: 900;
             padding: 4px 8px;
             box-shadow: 3px 3px 0 rgba(0,0,0,1);
-            pointer-events: none; /* Allows clicking "through" the label to copy color */
+            pointer-events: none;
             z-index: 2;
         }
         
@@ -204,9 +204,14 @@
             letter-spacing: 3px;
         }
         
+        /* Responsive fix for small screens */
         @media (max-width: 600px) {
             .shade-container {
                 flex-direction: column;
+            }
+            /* ADDED: Make columns full width on mobile */
+            .shade-column {
+                width: 100%;
             }
         }
     </style>
@@ -402,7 +407,7 @@
                 // Set text color for ADA compliance
                 shadeBox.style.color = getContrastColor(shade);
                 
-                // Display the hex code (using nodeValue/createTextNode to avoid wiping the child label)
+                // Display the hex code
                 const hexText = document.createTextNode(shade.toUpperCase());
                 shadeBox.appendChild(hexText);
                 
