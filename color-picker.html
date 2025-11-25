@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Picker - Neobrutalism</title>
+    <title>Color Generator - Neobrutalism</title>
     <style>
         /* Reset and base styles */
         * {
@@ -64,6 +64,46 @@
             max-width: 900px;
         }
 
+        /* Hex input section */
+        .hex-input-section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 4px dashed #000;
+        }
+
+        .hex-input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .hex-input-group label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            min-width: 120px;
+        }
+
+        .hex-input {
+            flex: 1;
+            min-width: 200px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 14px 20px;
+            border: 4px solid #000;
+            background: white;
+            text-transform: uppercase;
+        }
+
+        .hex-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px #FFD700;
+        }
+
         /* Color picker wrapper */
         .picker-wrapper {
             display: flex;
@@ -104,7 +144,7 @@
             height: 50px;
             -webkit-appearance: none;
             appearance: none;
-            background: transparent; /* Background handled by track specific rules below */
+            background: transparent;
             cursor: pointer;
         }
 
@@ -119,38 +159,36 @@
             border: 4px solid #000;
         }
 
-        /* --- UPDATED: DIAGONAL BACKGROUNDS FOR SLIDERS --- */
-
-        /* Red Slider: Red to White diagonal split */
+        /* Red Slider: 50/50 split Red to White */
         #redSlider::-webkit-slider-track {
-            background: linear-gradient(135deg, #FF0000 0%, #FF0000 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #FF0000 0%, #FF0000 50%, #fff 50%, #fff 100%);
         }
         #redSlider::-moz-range-track {
-            background: linear-gradient(135deg, #FF0000 0%, #FF0000 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #FF0000 0%, #FF0000 50%, #fff 50%, #fff 100%);
         }
 
-        /* Green Slider: Green to White diagonal split */
+        /* Green Slider: 50/50 split Green to White */
         #greenSlider::-webkit-slider-track {
-            background: linear-gradient(135deg, #00FF00 0%, #00FF00 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #00FF00 0%, #00FF00 50%, #fff 50%, #fff 100%);
         }
         #greenSlider::-moz-range-track {
-            background: linear-gradient(135deg, #00FF00 0%, #00FF00 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #00FF00 0%, #00FF00 50%, #fff 50%, #fff 100%);
         }
 
-        /* Blue Slider: Blue to White diagonal split */
+        /* Blue Slider: 50/50 split Blue to White */
         #blueSlider::-webkit-slider-track {
-            background: linear-gradient(135deg, #0000FF 0%, #0000FF 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #0000FF 0%, #0000FF 50%, #fff 50%, #fff 100%);
         }
         #blueSlider::-moz-range-track {
-            background: linear-gradient(135deg, #0000FF 0%, #0000FF 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #0000FF 0%, #0000FF 50%, #fff 50%, #fff 100%);
         }
 
-        /* Lightness Slider: Black to White diagonal split */
+        /* Lightness Slider: 50/50 split Black to White */
         #lightnessSlider::-webkit-slider-track {
-            background: linear-gradient(135deg, #000000 0%, #000000 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #000000 0%, #000000 50%, #fff 50%, #fff 100%);
         }
         #lightnessSlider::-moz-range-track {
-            background: linear-gradient(135deg, #000000 0%, #000000 50%, #fff 50%, #fff 100%);
+            background: linear-gradient(90deg, #000000 0%, #000000 50%, #fff 50%, #fff 100%);
         }
 
         /* Slider thumb */
@@ -295,10 +333,18 @@
 </head>
 <body>
 
-    <h1>Color Picker</h1>
+    <h1>Color Generator</h1>
     <p class="subtitle">Adjust RGB values, copy the hex code</p>
     
     <div class="container">
+        <!-- Hex Input Section -->
+        <div class="hex-input-section">
+            <div class="hex-input-group">
+                <label for="hexInput">Enter Hex Code:</label>
+                <input type="text" id="hexInput" class="hex-input" placeholder="#FF6B6B" maxlength="7" autocomplete="off">
+            </div>
+        </div>
+
         <div class="picker-wrapper">
             <div class="sliders-section">
                 <div class="slider-group">
@@ -328,14 +374,14 @@
                 <div class="slider-group">
                     <label for="lightnessSlider">Lightness:</label>
                     <div class="slider-container">
-                        <input type="range" id="lightnessSlider" min="-100" max="100" value="-79">
-                        <input type="number" class="value-display" id="lightnessValue" min="-100" max="100" value="-79">
+                        <input type="range" id="lightnessSlider" min="-100" max="100" value="0">
+                        <input type="number" class="value-display" id="lightnessValue" min="-100" max="100" value="0">
                     </div>
                 </div>
             </div>
 
             <div class="color-display" id="colorDisplay">
-                <span class="hex-label" id="hexLabel">#253214</span>
+                <span class="hex-label" id="hexLabel">#AFED60</span>
             </div>
         </div>
 
@@ -359,13 +405,13 @@
         const colorDisplay = document.getElementById('colorDisplay');
         const hexLabel = document.getElementById('hexLabel');
         const notification = document.getElementById('notification');
+        const hexInput = document.getElementById('hexInput');
 
         /**
          * Generate a random hex color
          * @returns {object} - Object with r, g, b values (0-255)
          */
         function generateRandomColor() {
-            // Generate random values for R, G, B (0-255)
             const r = Math.floor(Math.random() * 256);
             const g = Math.floor(Math.random() * 256);
             const b = Math.floor(Math.random() * 256);
@@ -375,7 +421,7 @@
 
         /**
          * Set random initial color for sliders and background
-         * Called on page load to create unique color each time
+         * Always sets lightness to 0 on page load
          */
         function setRandomInitialColor() {
             const { r, g, b } = generateRandomColor();
@@ -385,39 +431,30 @@
             greenSlider.value = g;
             blueSlider.value = b;
             
-            // Update the display (which will also update body background)
+            // Always reset lightness to 0
+            lightnessSlider.value = 0;
+            lightnessValue.value = 0;
+            
+            // Update the display
             updateColorDisplay();
         }
 
         /**
          * Apply lightness adjustment to RGB values
-         * Lightness slider adjusts brightness from -100 (darker) to +100 (lighter)
-         * @param {number} r - Red value (0-255)
-         * @param {number} g - Green value (0-255)
-         * @param {number} b - Blue value (0-255)
-         * @param {number} lightness - Lightness adjustment (-100 to 100)
-         * @returns {object} - Adjusted RGB values {r, g, b}
          */
         function applyLightness(r, g, b, lightness) {
-            // Calculate adjustment factor
-            // Negative values darken (multiply towards 0)
-            // Positive values lighten (add towards 255)
-            
             if (lightness < 0) {
-                // Darken: reduce each channel proportionally
-                const factor = (100 + lightness) / 100; // 0 to 1
+                const factor = (100 + lightness) / 100;
                 r = Math.round(r * factor);
                 g = Math.round(g * factor);
                 b = Math.round(b * factor);
             } else if (lightness > 0) {
-                // Lighten: move each channel towards 255
-                const factor = lightness / 100; // 0 to 1
+                const factor = lightness / 100;
                 r = Math.round(r + (255 - r) * factor);
                 g = Math.round(g + (255 - g) * factor);
                 b = Math.round(b + (255 - b) * factor);
             }
             
-            // Ensure values stay within valid range
             r = Math.max(0, Math.min(255, r));
             g = Math.max(0, Math.min(255, g));
             b = Math.max(0, Math.min(255, b));
@@ -427,137 +464,141 @@
 
         /**
          * Convert RGB values to hex color code
-         * @param {number} r - Red value (0-255)
-         * @param {number} g - Green value (0-255)
-         * @param {number} b - Blue value (0-255)
-         * @returns {string} - Hex color code (e.g., "#FF6B6B")
          */
         function rgbToHex(r, g, b) {
-            // Convert each value to hex and pad with zero if needed
             const hexR = r.toString(16).padStart(2, '0');
             const hexG = g.toString(16).padStart(2, '0');
             const hexB = b.toString(16).padStart(2, '0');
             
-            // Combine and return as uppercase hex code
             return `#${hexR}${hexG}${hexB}`.toUpperCase();
         }
 
         /**
-         * Calculate relative luminance of a color for WCAG contrast compliance
-         * Uses the formula from WCAG 2.0 specification
-         * @param {number} r - Red value (0-255)
-         * @param {number} g - Green value (0-255)
-         * @param {number} b - Blue value (0-255)
-         * @returns {number} - Relative luminance value (0-1)
+         * Convert hex color to RGB
+         */
+        function hexToRgb(hex) {
+            // Remove # if present
+            hex = hex.replace('#', '');
+            
+            // Handle 3-digit hex codes
+            if (hex.length === 3) {
+                hex = hex.split('').map(char => char + char).join('');
+            }
+            
+            // Validate hex code
+            if (hex.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(hex)) {
+                return null;
+            }
+            
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            return { r, g, b };
+        }
+
+        /**
+         * Calculate relative luminance for WCAG contrast
          */
         function calculateLuminance(r, g, b) {
-            // Convert RGB values to 0-1 range
             const rsRGB = r / 255;
             const gsRGB = g / 255;
             const bsRGB = b / 255;
 
-            // Apply gamma correction as per WCAG formula
             const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
             const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
             const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
 
-            // Calculate and return relative luminance
             return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
         }
 
         /**
          * Determine if text should be black or white for optimal contrast
-         * Based on WCAG 2.0 guidelines for contrast ratios
-         * @param {number} r - Red value (0-255)
-         * @param {number} g - Green value (0-255)
-         * @param {number} b - Blue value (0-255)
-         * @returns {string} - Either '#000000' or '#FFFFFF'
          */
         function getContrastColor(r, g, b) {
-            // Calculate luminance
             const luminance = calculateLuminance(r, g, b);
-            
-            // Use white text on dark backgrounds (luminance < 0.5)
-            // Use black text on light backgrounds (luminance >= 0.5)
             return luminance > 0.5 ? '#000000' : '#FFFFFF';
         }
 
         /**
          * Update the color display based on current RGB and lightness slider values
-         * Updates the display tile, hex label, text contrast, and body background
+         * @param {boolean} skipHexInput - If true, don't update the hex input field
          */
-        function updateColorDisplay() {
-            // Get current RGB values from sliders
+        function updateColorDisplay(skipHexInput = false) {
             const r = parseInt(redSlider.value);
             const g = parseInt(greenSlider.value);
             const b = parseInt(blueSlider.value);
             const lightness = parseInt(lightnessSlider.value);
             
-            // Update value displays to match sliders
             redValue.value = r;
             greenValue.value = g;
             blueValue.value = b;
             lightnessValue.value = lightness;
             
-            // Apply lightness adjustment to get final color
             const adjustedColor = applyLightness(r, g, b, lightness);
-            
-            // Convert to hex
             const hexColor = rgbToHex(adjustedColor.r, adjustedColor.g, adjustedColor.b);
             
-            // Update color display tile background
             colorDisplay.style.backgroundColor = hexColor;
-            
-            // Update body background to match the selected color
             document.body.style.backgroundColor = hexColor;
-            
-            // Update hex label text
             hexLabel.textContent = hexColor;
             
-            // Calculate and set appropriate text color for WCAG compliance
+            // Update hex input field only if not skipped
+            if (!skipHexInput) {
+                hexInput.value = hexColor;
+            }
+            
             const textColor = getContrastColor(adjustedColor.r, adjustedColor.g, adjustedColor.b);
             hexLabel.style.color = textColor;
             hexLabel.style.borderColor = textColor;
         }
 
         /**
+         * Handle hex input changes
+         */
+        function handleHexInput() {
+            let hexValue = hexInput.value.trim();
+            
+            // Add # if missing
+            if (hexValue && !hexValue.startsWith('#')) {
+                hexValue = '#' + hexValue;
+            }
+            
+            const rgb = hexToRgb(hexValue);
+            
+            if (rgb) {
+                // Update sliders with hex input values
+                redSlider.value = rgb.r;
+                greenSlider.value = rgb.g;
+                blueSlider.value = rgb.b;
+                
+                // Reset lightness to 0 when entering hex
+                lightnessSlider.value = 0;
+                
+                // Update display without updating hex input
+                updateColorDisplay(true);
+            }
+        }
+
+        /**
          * Validate and constrain input value to specified range
-         * @param {number} value - Input value to validate
-         * @param {number} min - Minimum allowed value
-         * @param {number} max - Maximum allowed value
-         * @returns {number} - Constrained value within valid range
          */
         function constrainValue(value, min, max) {
-            // Convert to number and handle invalid input
             const num = parseInt(value);
             if (isNaN(num)) return min;
-            
-            // Constrain to valid range
             return Math.max(min, Math.min(max, num));
         }
 
         /**
          * Handle manual input in value boxes
-         * Updates corresponding slider when user types a number
-         * @param {HTMLInputElement} inputElement - The number input element
-         * @param {HTMLInputElement} sliderElement - The corresponding range slider
-         * @param {number} min - Minimum valid value
-         * @param {number} max - Maximum valid value
          */
         function handleValueInput(inputElement, sliderElement, min, max) {
             inputElement.addEventListener('input', () => {
-                // Get and constrain the input value
                 const value = constrainValue(inputElement.value, min, max);
-                
-                // Update both the input and slider
                 inputElement.value = value;
                 sliderElement.value = value;
-                
-                // Update the color display
                 updateColorDisplay();
             });
 
-            // Also handle when user leaves the input field (blur event)
             inputElement.addEventListener('blur', () => {
                 const value = constrainValue(inputElement.value, min, max);
                 inputElement.value = value;
@@ -567,84 +608,65 @@
         }
 
         /**
-         * Copy text to clipboard using the modern Clipboard API
-         * @param {string} text - Text to copy to clipboard
-         * @returns {Promise} - Promise that resolves when copy is complete
+         * Copy text to clipboard
          */
         async function copyToClipboard(text) {
             try {
-                // Use the Clipboard API to write text
                 await navigator.clipboard.writeText(text);
                 return true;
             } catch (err) {
-                // Fallback for older browsers (if Clipboard API fails)
                 console.error('Failed to copy:', err);
-                
-                // Create temporary textarea element
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 textarea.style.position = 'fixed';
                 textarea.style.opacity = '0';
                 document.body.appendChild(textarea);
-                
-                // Select and copy text
                 textarea.select();
                 document.execCommand('copy');
-                
-                // Clean up
                 document.body.removeChild(textarea);
                 return true;
             }
         }
 
         /**
-         * Show notification banner message
-         * Displays a temporary notification that fades in and out
+         * Show notification banner
          */
         function showNotification() {
-            // Add 'show' class to trigger CSS animation
             notification.classList.add('show');
-            
-            // Remove notification after 2 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 2000);
         }
 
-        /**
-         * Handle color tile click - copy hex code to clipboard
-         */
+        // Event listeners
         colorDisplay.addEventListener('click', async () => {
             const hexCode = hexLabel.textContent;
-            
-            // Copy to clipboard
             const success = await copyToClipboard(hexCode);
-            
-            // Show notification if copy was successful
             if (success) {
                 showNotification();
             }
         });
 
-        /**
-         * Add event listeners to all RGB and lightness sliders
-         * Update display whenever any slider value changes
-         */
         redSlider.addEventListener('input', updateColorDisplay);
         greenSlider.addEventListener('input', updateColorDisplay);
         blueSlider.addEventListener('input', updateColorDisplay);
         lightnessSlider.addEventListener('input', updateColorDisplay);
 
-        /**
-         * Add event listeners to all number input boxes
-         * Allow manual entry of values which update the sliders
-         */
         handleValueInput(redValue, redSlider, 0, 255);
         handleValueInput(greenValue, greenSlider, 0, 255);
         handleValueInput(blueValue, blueSlider, 0, 255);
         handleValueInput(lightnessValue, lightnessSlider, -100, 100);
 
-        // Initialize with a random color on page load
+        // Hex input event listeners - only update on blur or Enter key
+        hexInput.addEventListener('blur', handleHexInput);
+        hexInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleHexInput();
+                hexInput.blur(); // Remove focus after Enter
+            }
+        });
+
+        // Initialize with random color and lightness at 0
         setRandomInitialColor();
     </script>
 </body>
