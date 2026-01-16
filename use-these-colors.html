@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hex Color Viewer</title>
     <style>
-        /* Neobrutalism design system with bold, harsh aesthetics */
+        /* CSS Reset - Remove default browser styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Base body styles with neobrutalist gray background */
         body {
             font-family: 'Courier New', monospace;
             background: #979797;
@@ -19,6 +20,7 @@
             min-height: 100vh;
         }
 
+        /* Main container with max-width for responsive design */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -58,6 +60,7 @@
             margin-bottom: 40px;
         }
 
+        /* Form label styling with uppercase text */
         label {
             display: block;
             font-size: 1.2rem;
@@ -80,6 +83,7 @@
             outline: none;
         }
 
+        /* Textarea focus state with green outline */
         textarea:focus {
             background: #fff;
             box-shadow: 0 0 0 4px #00E676;
@@ -101,11 +105,13 @@
             transition: all 0.1s;
         }
 
+        /* Button hover effect - moves up and left */
         button:hover {
             transform: translate(2px, 2px);
             box-shadow: 4px 4px 0px #000;
         }
 
+        /* Button active effect - appears pressed down */
         button:active {
             transform: translate(6px, 6px);
             box-shadow: 0px 0px 0px #000;
@@ -132,11 +138,13 @@
             position: relative;
         }
 
+        /* Color tile hover effect - moves up and left */
         .color-tile:hover {
             transform: translate(3px, 3px);
             box-shadow: 5px 5px 0px #000;
         }
 
+        /* Color tile active effect - appears pressed down */
         .color-tile:active {
             transform: translate(8px, 8px);
             box-shadow: 0px 0px 0px #000;
@@ -164,6 +172,7 @@
             );
         }
 
+        /* Invalid hex code label styling */
         .invalid-label {
             background: #fff;
             color: #000;
@@ -210,7 +219,7 @@
             }
         }
 
-        /* Responsive adjustments */
+        /* Mobile responsive adjustments */
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
@@ -245,7 +254,7 @@
     </div>
 
     <script>
-        // Get DOM elements
+        // DOM element references for UI interaction
         const hexInput = document.getElementById('hexInput');
         const showColorsBtn = document.getElementById('showColors');
         const colorGrid = document.getElementById('colorGrid');
@@ -488,13 +497,13 @@
             console.log('Background color set to:', randomColor);
         }
 
-        // Set random background color when page loads
+        // Initialize page with random background color
         setRandomBackgroundColor();
 
-        // Event listeners
+        // Event listener for button click
         showColorsBtn.addEventListener('click', displayColors);
 
-        // Allow Enter key in textarea to trigger display (Ctrl+Enter or Cmd+Enter)
+        // Keyboard shortcut: Ctrl+Enter or Cmd+Enter to display colors
         hexInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();

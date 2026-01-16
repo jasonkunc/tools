@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Generator - Neobrutalism</title>
     <style>
-        /* Reset and base styles */
+        /* CSS Reset - Remove default browser styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Base body styles with centered layout and smooth transitions */
         body {
             font-family: 'Courier New', monospace;
             background: #FF6B6B; /* Will be updated to match color display */
@@ -64,7 +65,7 @@
             max-width: 900px;
         }
 
-        /* Hex input section */
+        /* Hex input section with bottom border separator */
         .hex-input-section {
             margin-bottom: 30px;
             padding-bottom: 30px;
@@ -104,7 +105,7 @@
             box-shadow: 0 0 0 3px #FFD700;
         }
 
-        /* Color picker wrapper */
+        /* Flex container for color picker and display */
         .picker-wrapper {
             display: flex;
             gap: 30px;
@@ -138,7 +139,7 @@
             align-items: center;
         }
 
-        /* Custom slider styling */
+        /* Custom slider styling with neobrutalist borders */
         input[type="range"] {
             flex: 1;
             height: 50px;
@@ -183,7 +184,7 @@
             background: linear-gradient(90deg, #000000 0%, #000000 50%, #fff 50%, #fff 100%);
         }
 
-        /* Slider thumb */
+        /* Slider thumb styling for WebKit browsers */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -195,6 +196,7 @@
             box-shadow: 3px 3px 0 #000;
         }
 
+        /* Slider thumb styling for Firefox */
         input[type="range"]::-moz-range-thumb {
             width: 35px;
             height: 58px;
@@ -205,7 +207,7 @@
             box-shadow: 3px 3px 0 #000;
         }
 
-        /* Value display */
+        /* Number input box for displaying slider values */
         .value-display {
             width: 80px;
             text-align: center;
@@ -230,7 +232,7 @@
             height: 40px;
         }
 
-        /* Color display tile */
+        /* Color display tile with neobrutalist styling */
         .color-display {
             width: 220px;
             height: 100%;
@@ -245,17 +247,22 @@
             position: relative;
         }
 
+        /* Color tile hover effect - moves up and left */
         .color-display:hover {
             transform: translate(2px, 2px);
             box-shadow: 6px 6px 0 #000;
         }
 
+        /* Color tile active effect - appears pressed down */
         .color-display:active {
             transform: translate(4px, 4px);
             box-shadow: 4px 4px 0 #000;
         }
 
-        /* Hex code label inside the tile */
+        /* 
+         * Hex code label overlay on color tile 
+         * This style applies to the hex code label that overlays the color display tile
+         */
         .hex-label {
             font-size: 1.3rem;
             font-weight: bold;
@@ -276,7 +283,7 @@
             font-weight: bold;
         }
 
-        /* Notification banner */
+        /* Copy notification banner with slide animation */
         .notification {
             background: #ffd700;
             color: #000000;
@@ -301,7 +308,7 @@
             margin-top: 30px;
         }
 
-        /* Responsive design */
+        /* Mobile responsive adjustments */
         @media (max-width: 700px) {
             .container {
                 padding: 25px;
@@ -385,7 +392,7 @@
     </div>
 
     <script>
-        // Get references to DOM elements
+        // DOM element references for UI interaction
         const redSlider = document.getElementById('redSlider');
         const greenSlider = document.getElementById('greenSlider');
         const blueSlider = document.getElementById('blueSlider');
@@ -400,8 +407,8 @@
         const hexInput = document.getElementById('hexInput');
 
         /**
-         * Generate a random hex color
-         * @returns {object} - Object with r, g, b values (0-255)
+         * Generate a random RGB color
+         * @returns {Object} RGB object with r, g, b values (0-255)
          */
         function generateRandomColor() {
             const r = Math.floor(Math.random() * 256);
@@ -433,6 +440,12 @@
 
         /**
          * Apply lightness adjustment to RGB values
+         * Negative values darken, positive values lighten
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @param {number} lightness - Lightness adjustment (-100 to 100)
+         * @returns {Object} Adjusted RGB object
          */
         function applyLightness(r, g, b, lightness) {
             if (lightness < 0) {
@@ -456,6 +469,10 @@
 
         /**
          * Convert RGB values to hex color code
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {string} Hex color code with #
          */
         function rgbToHex(r, g, b) {
             const hexR = r.toString(16).padStart(2, '0');
@@ -466,7 +483,10 @@
         }
 
         /**
-         * Convert hex color to RGB
+         * Convert hex color to RGB values
+         * Handles both 3-digit and 6-digit hex codes
+         * @param {string} hex - Hex color code (with or without #)
+         * @returns {Object|null} RGB object or null if invalid
          */
         function hexToRgb(hex) {
             // Remove # if present
@@ -490,7 +510,12 @@
         }
 
         /**
-         * Calculate relative luminance for WCAG contrast
+         * Calculate relative luminance using WCAG 2.1 formula
+         * Used for determining optimal text contrast colors
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {number} Relative luminance (0-1)
          */
         function calculateLuminance(r, g, b) {
             const rsRGB = r / 255;
@@ -505,7 +530,12 @@
         }
 
         /**
-         * Determine if text should be black or white for optimal contrast
+         * Determine optimal text color for background contrast
+         * Uses WCAG guidelines for accessibility compliance
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {string} Either '#000000' (black) or '#FFFFFF' (white)
          */
         function getContrastColor(r, g, b) {
             const luminance = calculateLuminance(r, g, b);
@@ -573,6 +603,10 @@
 
         /**
          * Validate and constrain input value to specified range
+         * @param {string|number} value - Input value to constrain
+         * @param {number} min - Minimum allowed value
+         * @param {number} max - Maximum allowed value
+         * @returns {number} Constrained value within range
          */
         function constrainValue(value, min, max) {
             const num = parseInt(value);
@@ -600,7 +634,10 @@
         }
 
         /**
-         * Copy text to clipboard
+         * Copy text to clipboard using modern Clipboard API
+         * Includes fallback for older browsers
+         * @param {string} text - Text to copy to clipboard
+         * @returns {Promise<boolean>} Success status
          */
         async function copyToClipboard(text) {
             try {
@@ -621,7 +658,8 @@
         }
 
         /**
-         * Show notification banner
+         * Show copy notification banner with animation
+         * Displays for 2 seconds then hides automatically
          */
         function showNotification() {
             notification.classList.add('show');
@@ -630,7 +668,7 @@
             }, 2000);
         }
 
-        // Event listeners
+        // Event listeners for color tile click to copy hex code
         colorDisplay.addEventListener('click', async () => {
             const hexCode = hexLabel.textContent;
             const success = await copyToClipboard(hexCode);
@@ -639,11 +677,13 @@
             }
         });
 
+        // Slider event listeners for real-time color updates
         redSlider.addEventListener('input', updateColorDisplay);
         greenSlider.addEventListener('input', updateColorDisplay);
         blueSlider.addEventListener('input', updateColorDisplay);
         lightnessSlider.addEventListener('input', updateColorDisplay);
 
+        // Setup manual input handlers for value boxes
         handleValueInput(redValue, redSlider, 0, 255);
         handleValueInput(greenValue, greenSlider, 0, 255);
         handleValueInput(blueValue, blueSlider, 0, 255);
@@ -658,7 +698,7 @@
             }
         });
 
-        // Initialize with random color and lightness at 0
+        // Initialize page with random color and lightness at 0
         setRandomInitialColor();
     </script>
 </body>

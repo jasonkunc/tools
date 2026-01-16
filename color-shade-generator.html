@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Shade Generator</title>
     <style>
+        /* CSS Reset - Remove default browser styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        /* Base body styles with smooth background transitions */
         body {
             font-family: 'Courier New', monospace;
             background-color: #979797;
@@ -19,6 +21,7 @@
             transition: background-color 0.3s ease;
         }
         
+        /* Main container with centered layout */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -49,11 +52,13 @@
             text-align: center;
         }
         
+        /* Centered input container with spacing */
         .input-container {
             text-align: center;
             margin: 50px 0;
         }
 
+        /* Wrapper for relative positioning of original label */
         .input-wrapper {
             position: relative;
             display: inline-block;
@@ -81,11 +86,13 @@
             animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        /* Pop-out animation for the original label */
         @keyframes popIn {
             from { transform: scale(0) rotate(0deg); }
             to { transform: scale(1) rotate(3deg); }
         }
         
+        /* Main color input field with neobrutalist styling */
         input {
             padding: 20px 30px;
             font-size: 24px;
@@ -100,16 +107,19 @@
             transition: all 0.1s;
         }
         
+        /* Input focus state - appears pressed down */
         input:focus {
             outline: none;
             transform: translate(2px, 2px);
             box-shadow: 8px 8px 0 #000;
         }
         
+        /* Placeholder text styling */
         input::placeholder {
             color: #999;
         }
         
+        /* Flex container for shade columns */
         .shade-container {
             display: flex;
             flex-direction: row;
@@ -117,6 +127,7 @@
             align-items: flex-start;
         }
         
+        /* Individual column for organizing shades */
         .shade-column {
             flex: 1;
             display: flex;
@@ -124,6 +135,7 @@
             gap: 15px;
         }
         
+        /* Individual shade box with neobrutalist styling */
         .shade-box {
             position: relative;
             padding: 30px 20px 20px 20px;
@@ -138,11 +150,13 @@
             letter-spacing: 2px;
         }
         
+        /* Shade box hover effect - moves up and left */
         .shade-box:hover {
             transform: translate(2px, 2px);
             box-shadow: 4px 4px 0 #000;
         }
         
+        /* Shade box active effect - appears pressed down */
         .shade-box:active {
             transform: translate(6px, 6px);
             box-shadow: 0 0 0 #000;
@@ -164,6 +178,7 @@
             z-index: 2;
         }
         
+        /* Error message styling for invalid hex codes */
         .error-message {
             background-color: #FF6B6B;
             border: 5px solid #000;
@@ -177,6 +192,7 @@
             width: 100%;
         }
         
+        /* Copy notification popup with scale animation */
         .copy-notification {
             position: fixed;
             top: 50%;
@@ -193,10 +209,12 @@
             transition: transform 0.2s;
         }
         
+        /* Show state for copy notification - scales to full size */
         .copy-notification.show {
             transform: translate(-50%, -50%) scale(1);
         }
         
+        /* Hex code display in copy notification */
         .copied-hex {
             display: block;
             margin-top: 10px;
@@ -204,12 +222,12 @@
             letter-spacing: 3px;
         }
         
-        /* Responsive fix for small screens */
+        /* Mobile responsive adjustments */
         @media (max-width: 600px) {
             .shade-container {
                 flex-direction: column;
             }
-            /* ADDED: Make columns full width on mobile */
+            /* Make columns full width on mobile */
             .shade-column {
                 width: 100%;
             }
@@ -240,7 +258,7 @@
     </div>
 
     <script>
-        // Get references to DOM elements
+        // DOM element references for UI interaction
         const colorInput = document.getElementById('colorInput');
         const originalLabel = document.getElementById('originalLabel');
         const shadeContainer = document.getElementById('shadeContainer');
@@ -282,6 +300,9 @@
 
         /**
          * Converts hex color to RGB object
+         * Handles both 3-digit and 6-digit hex codes
+         * @param {string} hex - Hex color code (with or without #)
+         * @returns {Object} RGB object with r, g, b properties (0-255)
          */
         function hexToRgb(hex) {
             hex = hex.replace('#', '');
@@ -296,6 +317,11 @@
 
         /**
          * Converts RGB values to hex color code
+         * Clamps values to valid range (0-255) and rounds to integers
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {string} Hex color code with #
          */
         function rgbToHex(r, g, b) {
             r = Math.max(0, Math.min(255, Math.round(r)));
@@ -306,7 +332,12 @@
         }
 
         /**
-         * Calculates relative luminance for a color (WCAG formula)
+         * Calculates relative luminance for a color using WCAG 2.1 formula
+         * Used for determining appropriate text contrast colors
+         * @param {number} r - Red value (0-255)
+         * @param {number} g - Green value (0-255)
+         * @param {number} b - Blue value (0-255)
+         * @returns {number} Relative luminance (0-1)
          */
         function getLuminance(r, g, b) {
             const normalize = (c) => {
@@ -320,7 +351,10 @@
         }
 
         /**
-         * Determines if white or black text should be used based on background color
+         * Determines optimal text color (black or white) for background contrast
+         * Uses WCAG guidelines for accessibility compliance
+         * @param {string} hexColor - Background color in hex format
+         * @returns {string} Either '#000000' (black) or '#ffffff' (white)
          */
         function getContrastColor(hexColor) {
             const rgb = hexToRgb(hexColor);
@@ -329,7 +363,10 @@
         }
 
         /**
-         * Generates a lighter shade of the given color
+         * Generates a lighter shade by blending with white
+         * @param {Object} rgb - RGB object with r, g, b properties
+         * @param {number} percent - Percentage to lighten (0-100)
+         * @returns {string} Lighter hex color code
          */
         function lightenColor(rgb, percent) {
             const factor = percent / 100;
@@ -340,7 +377,10 @@
         }
 
         /**
-         * Generates a darker shade of the given color
+         * Generates a darker shade by blending with black
+         * @param {Object} rgb - RGB object with r, g, b properties
+         * @param {number} percent - Percentage to darken (0-100)
+         * @returns {string} Darker hex color code
          */
         function darkenColor(rgb, percent) {
             const factor = 1 - (percent / 100);
@@ -462,7 +502,7 @@
             }
         });
 
-        // Randomize body background color on page load
+        // Initialize page with random background color
         randomizeBodyBackground();
 
         // Generate shades on page load if there's a default value
