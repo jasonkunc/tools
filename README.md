@@ -13,7 +13,6 @@ A small collection of web color tools with neobrutalist design
 
 <div style="display: flex; gap: 30px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
 <div style="flex: 1; min-width: 250px;">
-<p style="font-size: 16px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;">VISUALIZE HEX CODES</p>
 <p style="margin-bottom: 15px;">Paste any text containing hex codes to extract and view them as interactive color tiles. Perfect for quickly visualizing color palettes from CSS files, design documents, or any text source.</p>
 <ul style="font-weight: bold; text-transform: uppercase; margin-left: 20px;">
 <li>Extract hex codes from any text</li>
@@ -39,7 +38,6 @@ A small collection of web color tools with neobrutalist design
 
 <div style="display: flex; gap: 30px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
 <div style="flex: 1; min-width: 250px;">
-<p style="font-size: 16px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;">GENERATE COLOR SHADES</p>
 <p style="margin-bottom: 15px;">Enter a hex color code to see lighter and darker shades in 5% steps. Perfect for creating consistent color palettes and finding the perfect shade variations.</p>
 <ul style="font-weight: bold; text-transform: uppercase; margin-left: 20px;">
 <li>5% incremental shade steps</li>
@@ -65,7 +63,6 @@ A small collection of web color tools with neobrutalist design
 
 <div style="display: flex; gap: 30px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
 <div style="flex: 1; min-width: 250px;">
-<p style="font-size: 16px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;">CREATE CUSTOM COLORS</p>
 <p style="margin-bottom: 15px;">Start with a color or create your own with simple RGB sliders. Includes lightness adjustment and real-time hex code generation for precise color control.</p>
 <ul style="font-weight: bold; text-transform: uppercase; margin-left: 20px;">
 <li>RGB sliders with live preview</li>
