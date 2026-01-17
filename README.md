@@ -27,7 +27,6 @@ A small collection of web color tools with neobrutalist design
 <img src="img/batch-hex-code-viewer.png" alt="Batch Hex Code Viewer Screenshot" style="width: 100%; border: 4px solid #000; box-shadow: 6px 6px 0 #000; transition: all 0.1s;">
 </a>
 <div style="background-color: #FFD700; border: 3px solid #000; padding: 10px; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 10px; box-shadow: 4px 4px 0 #000;">
-CLICK TO TRY IT
 </div>
 </div>
 </div>
@@ -54,7 +53,6 @@ CLICK TO TRY IT
 <img src="img/color-shade-generator.png" alt="Color Shade Generator Screenshot" style="width: 100%; border: 4px solid #000; box-shadow: 6px 6px 0 #000; transition: all 0.1s;">
 </a>
 <div style="background-color: #FF00FF; border: 3px solid #000; padding: 10px; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 10px; box-shadow: 4px 4px 0 #000; color: #fff;">
-CLICK TO TRY IT
 </div>
 </div>
 </div>
@@ -81,7 +79,6 @@ CLICK TO TRY IT
 <img src="img/color-generator.png" alt="Color Generator Screenshot" style="width: 100%; border: 4px solid #000; box-shadow: 6px 6px 0 #000; transition: all 0.1s;">
 </a>
 <div style="background-color: #FF6B6B; border: 3px solid #000; padding: 10px; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 10px; box-shadow: 4px 4px 0 #000; color: #fff;">
-CLICK TO TRY IT
 </div>
 </div>
 </div>
