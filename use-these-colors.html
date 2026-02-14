@@ -117,6 +117,17 @@
             box-shadow: 0px 0px 0px #000;
         }
 
+        /* Hidden class for share button */
+        .hidden {
+            display: none;
+        }
+
+        /* Share button styling */
+        #shareColors {
+            background: #FFD700;
+            color: #000;
+        }
+
         /* Grid container for color tiles */
         .color-grid {
             display: grid;
@@ -247,6 +258,7 @@
                 aria-label="Paste any text containing hex color codes"
             ></textarea>
             <button id="showColors" type="button">SHOW COLORS</button>
+            <button id="shareColors" type="button" class="hidden">SHARE THESE COLORS</button>
         </div>
 
         <!-- Grid container for color tiles -->
@@ -257,6 +269,7 @@
         // DOM element references for UI interaction
         const hexInput = document.getElementById('hexInput');
         const showColorsBtn = document.getElementById('showColors');
+        const shareColorsBtn = document.getElementById('shareColors');
         const colorGrid = document.getElementById('colorGrid');
 
         /**
@@ -338,15 +351,46 @@
          * Copies text to clipboard and shows notification
          * Uses modern Clipboard API with fallback
          * @param {string} text - Text to copy to clipboard
+         * @param {string} notificationText - Optional custom notification text
          */
-        function copyToClipboard(text) {
+        function copyToClipboard(text, notificationText = null) {
             // Use modern Clipboard API
             navigator.clipboard.writeText(text).then(() => {
-                showCopyNotification(text);
+                showCopyNotification(notificationText || text);
             }).catch(err => {
                 // Fallback for older browsers
                 console.error('Failed to copy:', err);
             });
+        }
+
+        /**
+         * Creates a shareable URL with colors pre-populated
+         * @returns {string} - Shareable URL with color parameters
+         */
+        function createShareableUrl() {
+            const input = hexInput.value.trim();
+            if (!input) return '';
+            
+            // Parse hex codes from input
+            const hexCodes = parseHexCodes(input);
+            const validColors = hexCodes.filter(hexCode => isValidHex(hexCode));
+            
+            if (validColors.length === 0) return '';
+            
+            // Create URL with colors as query parameter
+            const baseUrl = window.location.origin + window.location.pathname;
+            const colorParam = validColors.join(',');
+            return `${baseUrl}?colors=${encodeURIComponent(colorParam)}`;
+        }
+
+        /**
+         * Handles sharing colors by copying URL to clipboard
+         */
+        function shareColors() {
+            const shareUrl = createShareableUrl();
+            if (shareUrl) {
+                copyToClipboard(shareUrl, 'URL copied');
+            }
         }
 
         /**
@@ -455,6 +499,8 @@
             const input = hexInput.value.trim();
             
             if (!input) {
+                // Hide share button if no input
+                shareColorsBtn.classList.add('hidden');
                 return;
             }
             
@@ -467,6 +513,14 @@
                 const tile = createColorTile(hexCode, isValid);
                 colorGrid.appendChild(tile);
             });
+
+            // Show share button if we have valid colors
+            const validColors = hexCodes.filter(hexCode => isValidHex(hexCode));
+            if (validColors.length > 0) {
+                shareColorsBtn.classList.remove('hidden');
+            } else {
+                shareColorsBtn.classList.add('hidden');
+            }
         }
 
         /**
@@ -503,6 +557,9 @@
         // Event listener for button click
         showColorsBtn.addEventListener('click', displayColors);
 
+        // Event listener for share button
+        shareColorsBtn.addEventListener('click', shareColors);
+
         // Keyboard shortcut: Ctrl+Enter or Cmd+Enter to display colors
         hexInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -510,6 +567,23 @@
                 displayColors();
             }
         });
+
+        /**
+         * Load colors from URL parameters if present
+         */
+        function loadColorsFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const colorsParam = urlParams.get('colors');
+            
+            if (colorsParam) {
+                const colors = colorsParam.split(',').map(color => color.trim()).filter(color => color);
+                hexInput.value = colors.join(' ');
+                displayColors();
+            }
+        }
+
+        // Load colors from URL on page load
+        loadColorsFromUrl();
     </script>
 </body>
 </html>
