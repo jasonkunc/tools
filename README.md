@@ -25,12 +25,12 @@ A collection of web tools with neobrutalist design
 <div style="flex: 0 0 300px;">
 <div style="display: flex; flex-direction: column; gap: 10px;">
 <a href="https://jasonkunc.github.io/tools/ipsum/vegan-ipsum.html" style="display: block; text-decoration: none;">
-<div style="background-color: #2E7D32; border: 3px solid #000; padding: 15px; text-align: center; font-weight: bold; text-transform: uppercase; box-shadow: 4px 4px 0 #000; color: #fff;">
+<div style="background-color: #69F0AE; border: 3px solid #000; padding: 15px; text-align: center; font-weight: bold; text-transform: uppercase; box-shadow: 4px 4px 0 #000; color: #000;">
 VEGAN IPSUM
 </div>
 </a>
 <a href="https://jasonkunc.github.io/tools/ipsum/skate-ipsum.html" style="display: block; text-decoration: none;">
-<div style="background-color: #1565C0; border: 3px solid #000; padding: 15px; text-align: center; font-weight: bold; text-transform: uppercase; box-shadow: 4px 4px 0 #000; color: #fff;">
+<div style="background-color: #40C4FF; border: 3px solid #000; padding: 15px; text-align: center; font-weight: bold; text-transform: uppercase; box-shadow: 4px 4px 0 #000; color: #000;">
 SKATE IPSUM
 </div>
 </a>
